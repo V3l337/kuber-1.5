@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-multitool-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        ports:
+        - containerPort: 8080
+        command: ["/bin/sh", "-c", "httpd -p 8080 -h / & sleep infinity"]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multitool-service
+spec:
+  selector:
+    app: backend 
+  ports:
+  - name: multitool-port
+    protocol: TCP
+    port: 9002       # Порт сервиса для multitool
+    targetPort: 8080  # Внутренний порт multitool
+  type: ClusterIP
