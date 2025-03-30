@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+spec:
+  # ingressClassName: test-example
+  rules:
+  - host: v3l.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 9001
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: multitool-service
+            port:
+              number: 9002
